@@ -4,186 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard de Métricas Hospitalares</title>
+  <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --navy:    #1a2c4e;
-      --green:   #2e7d32;
-      --green-l: #e8f5e9;
-      --amber:   #f59e0b;
-      --red:     #dc2626;
-      --gray:    #6b7280;
-      --bg:      #f8fafc;
-      --card:    #ffffff;
-      --border:  #e2e8f0;
-      --text:    #1e293b;
-    }
-
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── HEADER ── */
-    header {
-      background: var(--navy);
-      color: #fff;
-      padding: 0 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 64px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.2);
-    }
-    header h1 { font-size: 1.15rem; font-weight: 600; letter-spacing: .02em; }
-    header span { font-size: .8rem; opacity: .65; }
-
-    /* ── LAYOUT ── */
-    main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
-
-    /* ── KPI CARDS ── */
-    .kpis {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 1.25rem;
-      margin-bottom: 2rem;
-    }
-    .kpi {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: .35rem;
-      box-shadow: 0 1px 4px rgba(0,0,0,.06);
-      transition: transform .15s;
-    }
-    .kpi:hover { transform: translateY(-2px); }
-    .kpi-label { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--gray); }
-    .kpi-value { font-size: 2rem; font-weight: 700; color: var(--navy); line-height: 1; }
-    .kpi-sub   { font-size: .78rem; color: var(--gray); }
-    .kpi.alert .kpi-value { color: var(--red); }
-    .kpi.ok    .kpi-value { color: var(--green); }
-
-    /* ── CHARTS GRID ── */
-    .charts {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      margin-bottom: 2rem;
-    }
-    @media (max-width: 700px) { .charts { grid-template-columns: 1fr; } }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.25rem 1.5rem;
-      box-shadow: 0 1px 4px rgba(0,0,0,.06);
-    }
-    .card-title {
-      font-size: .82rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: var(--navy);
-      margin-bottom: 1rem;
-      padding-bottom: .5rem;
-      border-bottom: 2px solid var(--green-l);
-    }
-    .card canvas { max-height: 230px; }
-
-    /* ── TABLE ── */
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: .875rem; }
-    thead tr { background: var(--navy); color: #fff; }
-    thead th { padding: .65rem 1rem; text-align: left; font-weight: 600; font-size: .78rem; letter-spacing: .04em; }
-    tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
-    tbody tr:hover { background: #f1f5f9; }
-    td { padding: .65rem 1rem; }
-    .badge {
-      display: inline-block;
-      padding: .2rem .55rem;
-      border-radius: 99px;
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .03em;
-    }
-    .badge-ok     { background: var(--green-l); color: var(--green); }
-    .badge-alert  { background: #fef3c7; color: #92400e; }
-    .badge-crit   { background: #fee2e2; color: var(--red); }
-
-    footer {
-      text-align: center;
-      font-size: .75rem;
-      color: var(--gray);
-      padding: 2rem 0 1rem;
-    }
-    footer a { color: var(--gray); text-decoration: none; border-bottom: 1px dotted var(--gray); }
-    footer a:hover { color: var(--navy); }
-
-    /* ── EXPORT BUTTON ── */
-    .toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-    .btn-export {
-      background: var(--navy);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: .45rem 1rem;
-      font-size: .8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s;
-    }
-    .btn-export:hover { background: #243d6a; }
-
-    /* ── MODAL ── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.45);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 2rem;
-      min-width: 320px;
-      max-width: 90vw;
-      box-shadow: 0 8px 32px rgba(0,0,0,.18);
-      position: relative;
-    }
-    .modal h2 { font-size: 1.1rem; color: var(--navy); margin-bottom: 1rem; }
-    .modal-close {
-      position: absolute;
-      top: 1rem; right: 1rem;
-      background: none; border: none;
-      font-size: 1.3rem; cursor: pointer; color: var(--gray);
-    }
-    .modal-row { display: flex; justify-content: space-between; padding: .4rem 0; border-bottom: 1px solid var(--border); font-size: .88rem; }
-    .modal-row:last-child { border: none; }
-    .modal-label { color: var(--gray); font-weight: 600; }
-  </style>
 </head>
 <body>
 
 <header>
-  <h1>🏥 Dashboard de Métricas Hospitalares</h1>
-  <span id="updated"></span>
+  <div class="header-left">
+    <h1>🏥 Dashboard de Métricas Hospitalares</h1>
+    <span id="updated"></span>
+  </div>
+  <div class="header-right">
+    <span id="nomeUsuario"></span>
+    <button class="btn-logout" id="btnLogout">Sair</button>
+  </div>
 </header>
 
 <main>
@@ -191,7 +25,7 @@
   <!-- KPIs -->
   <section class="kpis" id="kpis"></section>
 
-  <!-- Charts -->
+  <!-- Gráficos -->
   <section class="charts">
     <div class="card">
       <div class="card-title">Movimentações — últimos 7 dias</div>
@@ -204,20 +38,35 @@
   </section>
 
   <!-- Modal de detalhes -->
-  <div class="modal-overlay" id="modalOverlay">
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal">
-      <button class="modal-close" id="modalClose">✕</button>
+      <button class="modal-close" id="modalClose" aria-label="Fechar">✕</button>
       <h2 id="modalTitle">Detalhes do Produto</h2>
       <div id="modalBody"></div>
     </div>
   </div>
 
-  <!-- Tabela críticos -->
+  <!-- Tabela de críticos -->
   <div class="card">
     <div class="toolbar">
-      <div class="card-title" style="margin:0;border:none;padding:0">Itens em Estoque Crítico</div>
+      <div class="card-title">Itens em Estoque Crítico</div>
       <button class="btn-export" id="btnExport">⬇ Exportar CSV</button>
     </div>
+
+    <div class="filters">
+      <input
+        type="search"
+        class="filter-input"
+        id="inputBusca"
+        placeholder="Buscar por nome do produto..."
+        aria-label="Buscar produto"
+      />
+      <select class="filter-select" id="selectCategoria" aria-label="Filtrar por categoria">
+        <option value="">Todas as categorias</option>
+      </select>
+      <span class="filter-count" id="filterCount"></span>
+    </div>
+
     <div class="table-wrap">
       <table>
         <thead>
@@ -236,142 +85,11 @@
 
 </main>
 
-<footer>Dashboard de Métricas Hospitalares · Diogo Bello · <a href="https://github.com/Dioguint" target="_blank">github.com/Dioguint</a></footer>
+<footer>
+  Dashboard de Métricas Hospitalares · Diogo Bello ·
+  <a href="https://github.com/Dioguint" target="_blank" rel="noopener noreferrer">github.com/Dioguint</a>
+</footer>
 
-<script>
-// ── Dados simulados (substituir por chamadas à API/backend futuramente) ──────
-const DATA = {
-  kpis: [
-    { label: "Total de Itens",      value: 142,  sub: "produtos cadastrados",   cls: "" },
-    { label: "Itens Críticos",      value: 11,   sub: "abaixo do mínimo",       cls: "alert" },
-    { label: "Entradas (7 dias)",   value: 384,  sub: "unidades recebidas",     cls: "" },
-    { label: "Saídas (7 dias)",     value: 291,  sub: "unidades distribuídas",  cls: "" },
-    { label: "Taxa de Abastecim.",  value: "97%",sub: "pedidos atendidos",      cls: "ok" },
-  ],
-
-  movimentacoes: {
-    labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
-    entradas: [68, 45, 72, 51, 83, 38, 27],
-    saidas:   [52, 39, 61, 44, 71, 14, 10],
-  },
-
-  categorias: {
-    labels: ["Medicamentos", "Material cirúrgico", "EPI", "Higiene", "Outros"],
-    valores: [38, 25, 18, 12, 7],
-  },
-
-  criticos: [
-    { produto: "Luva cirúrgica M",    categoria: "EPI",              atual: 2,  min: 20, status: "crit" },
-    { produto: "Soro fisiológico 500ml", categoria: "Medicamentos",  atual: 4,  min: 15, status: "crit" },
-    { produto: "Esparadrapo 10m",     categoria: "Material cirúrgico", atual: 3, min: 10, status: "crit" },
-    { produto: "Máscara N95",         categoria: "EPI",              atual: 8,  min: 30, status: "crit" },
-    { produto: "Gaze estéril",        categoria: "Material cirúrgico", atual: 6, min: 10, status: "alert" },
-    { produto: "Álcool 70% 1L",       categoria: "Higiene",          atual: 4,  min:  8, status: "alert" },
-    { produto: "Dipirona 500mg",      categoria: "Medicamentos",     atual: 9,  min: 12, status: "alert" },
-    { produto: "Seringa 10ml",        categoria: "Material cirúrgico", atual: 14, min: 20, status: "alert" },
-  ]
-};
-
-// ── KPIs ─────────────────────────────────────────────────────────────────────
-const kpisEl = document.getElementById("kpis");
-DATA.kpis.forEach(k => {
-  kpisEl.innerHTML += `
-    <div class="kpi ${k.cls}">
-      <span class="kpi-label">${k.label}</span>
-      <span class="kpi-value">${k.value}</span>
-      <span class="kpi-sub">${k.sub}</span>
-    </div>`;
-});
-
-// ── Timestamp ────────────────────────────────────────────────────────────────
-document.getElementById("updated").textContent =
-  "Atualizado: " + new Date().toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
-
-// ── Chart movimentações ───────────────────────────────────────────────────────
-new Chart(document.getElementById("chartMovs"), {
-  type: "bar",
-  data: {
-    labels: DATA.movimentacoes.labels,
-    datasets: [
-      { label: "Entradas", data: DATA.movimentacoes.entradas, backgroundColor: "#2e7d32", borderRadius: 5 },
-      { label: "Saídas",   data: DATA.movimentacoes.saidas,   backgroundColor: "#90caf9", borderRadius: 5 },
-    ]
-  },
-  options: {
-    responsive: true,
-    plugins: { legend: { position: "bottom" } },
-    scales: { y: { beginAtZero: true, grid: { color: "#f1f5f9" } }, x: { grid: { display: false } } }
-  }
-});
-
-// ── Chart categorias ──────────────────────────────────────────────────────────
-new Chart(document.getElementById("chartCats"), {
-  type: "doughnut",
-  data: {
-    labels: DATA.categorias.labels,
-    datasets: [{
-      data: DATA.categorias.valores,
-      backgroundColor: ["#1a2c4e","#2e7d32","#f59e0b","#60a5fa","#94a3b8"],
-      borderWidth: 2,
-      borderColor: "#fff",
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { position: "bottom", labels: { padding: 16, font: { size: 12 } } }
-    }
-  }
-});
-
-// ── Tabela ────────────────────────────────────────────────────────────────────
-const tbody = document.getElementById("tabelaCriticos");
-const badge = { crit: ["badge-crit","CRÍTICO"], alert: ["badge-alert","ATENÇÃO"] };
-DATA.criticos.forEach(r => {
-  const [cls, txt] = badge[r.status];
-  const pct = Math.round((r.atual / r.min) * 100);
-  const tr = document.createElement("tr");
-  tr.style.cursor = "pointer";
-  tr.title = "Clique para ver detalhes";
-  tr.innerHTML = `
-    <td><strong style="color:var(--navy)">${r.produto}</strong></td>
-    <td>${r.categoria}</td>
-    <td><strong>${r.atual}</strong></td>
-    <td>${r.min}</td>
-    <td><span class="badge ${cls}">${txt}</span></td>`;
-  tr.addEventListener("click", () => openModal(r, cls, txt, pct));
-  tbody.appendChild(tr);
-});
-
-// ── Modal ─────────────────────────────────────────────────────────────────────
-const overlay = document.getElementById("modalOverlay");
-const modalClose = document.getElementById("modalClose");
-
-function openModal(r, cls, txt, pct) {
-  document.getElementById("modalTitle").textContent = r.produto;
-  document.getElementById("modalBody").innerHTML = `
-    <div class="modal-row"><span class="modal-label">Categoria</span><span>${r.categoria}</span></div>
-    <div class="modal-row"><span class="modal-label">Qtd. Atual</span><span><strong>${r.atual}</strong></span></div>
-    <div class="modal-row"><span class="modal-label">Qtd. Mínima</span><span>${r.min}</span></div>
-    <div class="modal-row"><span class="modal-label">Nível do estoque</span><span>${pct}% do mínimo</span></div>
-    <div class="modal-row"><span class="modal-label">Status</span><span class="badge ${cls}">${txt}</span></div>
-    <div class="modal-row"><span class="modal-label">Ação recomendada</span><span>Solicitar reposição de ${r.min - r.atual} unidades</span></div>`;
-  overlay.classList.add("open");
-}
-modalClose.addEventListener("click", () => overlay.classList.remove("open"));
-overlay.addEventListener("click", e => { if (e.target === overlay) overlay.classList.remove("open"); });
-
-// ── Export CSV ────────────────────────────────────────────────────────────────
-document.getElementById("btnExport").addEventListener("click", () => {
-  const header = ["Produto","Categoria","Qtd. Atual","Qtd. Mínima","Status"];
-  const rows = DATA.criticos.map(r => [r.produto, r.categoria, r.atual, r.min, r.status === "crit" ? "CRÍTICO" : "ATENÇÃO"]);
-  const csv = [header, ...rows].map(r => r.join(";")).join("\n");
-  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "estoque-critico.csv";
-  a.click();
-});
-</script>
+<script src="js/main.js"></script>
 </body>
 </html>
