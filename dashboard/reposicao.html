@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reposição de Estoque — Dashboard Hospitalar</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>🏥 Reposição de Estoque</h1>
+    <span id="updated"></span>
+  </div>
+  <div class="header-right">
+    <span id="nomeUsuario"></span>
+    <button class="btn-logout" id="btnLogout">Sair</button>
+  </div>
+</header>
+
+<nav class="subnav">
+  <a href="index.html" class="subnav-link">← Voltar ao Dashboard</a>
+</nav>
+
+<main>
+
+  <div id="apiBanner" class="api-banner"></div>
+
+  <!-- Formulário de reposição -->
+  <div class="card reposicao-card">
+    <div class="card-title">Registrar Entrada de Estoque</div>
+
+    <div class="reposicao-form">
+
+      <div class="form-group">
+        <label for="selectProduto">Produto</label>
+        <select id="selectProduto" class="filter-select full-width">
+          <option value="">Carregando produtos...</option>
+        </select>
+      </div>
+
+      <div class="produto-info" id="produtoInfo" hidden>
+        <div class="info-row">
+          <span class="info-label">Categoria</span>
+          <span id="infoCat">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Estoque atual</span>
+          <span id="infoQtd">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Estoque mínimo</span>
+          <span id="infoMin">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Sugestão de reposição</span>
+          <span id="infoSugestao" class="badge badge-alert">—</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="inputQtd">Quantidade a repor</label>
+        <input type="number" id="inputQtd" class="filter-input full-width" min="1" placeholder="0" />
+      </div>
+
+      <div class="form-group">
+        <label for="inputObs">Observação (opcional)</label>
+        <input type="text" id="inputObs" class="filter-input full-width" placeholder="ex: Fornecedor X, NF 1234..." />
+      </div>
+
+      <p class="form-error" id="formError" role="alert"></p>
+
+      <button class="btn-primary" id="btnConfirmar">Confirmar Entrada</button>
+    </div>
+  </div>
+
+  <!-- Histórico de entradas recentes -->
+  <div class="card" id="cardHistorico" hidden>
+    <div class="card-title">Histórico Recente — <span id="historicoNome"></span></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Quantidade</th>
+            <th>Observação</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyHistorico"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Toast de sucesso -->
+  <div class="toast" id="toast"></div>
+
+</main>
+
+<footer>
+  Dashboard de Métricas Hospitalares · Diogo Bello ·
+  <a href="https://github.com/Dioguint" target="_blank" rel="noopener noreferrer">github.com/Dioguint</a>
+</footer>
+
+<script src="js/reposicao.js"></script>
+</body>
+</html>
