@@ -1,7 +1,7 @@
 // Credenciais de demonstração (substituir por API real futuramente)
 const USERS = [
-  { username: 'admin', password: 'hospital@2025', name: 'Administrador' },
-  { username: 'estoque', password: 'estoque@2025', name: 'Operador de Estoque' },
+  { username: 'admin', password: '123', name: 'Administrador' },
+  { username: 'estoque', password: '123', name: 'Operador de Estoque' },
 ];
 
 const form        = document.getElementById('loginForm');
