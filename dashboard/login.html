@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Dashboard Hospitalar</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <h1>🏥 Dashboard Hospitalar</h1>
+    <p>Faça login para acessar o sistema.</p>
+
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label for="username">Usuário</label>
+        <input type="text" id="username" placeholder="seu usuário" autocomplete="username" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required />
+      </div>
+      <p class="login-error" id="loginError" role="alert"></p>
+      <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+  </div>
+</div>
+
+<script src="js/login.js"></script>
+</body>
+</html>
