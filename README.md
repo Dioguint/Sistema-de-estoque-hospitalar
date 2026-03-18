@@ -116,8 +116,8 @@ Abra `dashboard/login.html` no navegador.
 **Credenciais de acesso:**
 | Usuário | Senha |
 |---------|-------|
-| `admin` | `hospital@2025` |
-| `estoque` | `estoque@2025` |
+| `admin` | `123` |
+| `estoque` | `123` |
 
 > Sem a API rodando, o dashboard exibe dados de demonstração automaticamente.
 
