@@ -9,21 +9,44 @@
 <body>
 
 <div class="login-wrapper">
-  <div class="login-card">
-    <h1>🏥 Dashboard Hospitalar</h1>
-    <p>Faça login para acessar o sistema.</p>
+  <div class="login-card" role="main">
+    <h1>🏥 <span>Dashboard Hospitalar</span></h1>
+    <p id="login-desc">Faça login para acessar o sistema.</p>
 
-    <form id="loginForm" novalidate>
+    <form id="loginForm" novalidate aria-describedby="login-desc loginError">
+
       <div class="form-group">
         <label for="username">Usuário</label>
-        <input type="text" id="username" placeholder="seu usuário" autocomplete="username" required />
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="seu usuário"
+          autocomplete="username"
+          required
+          aria-required="true"
+          aria-describedby="loginError"
+        />
       </div>
+
       <div class="form-group">
         <label for="password">Senha</label>
-        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+          required
+          aria-required="true"
+          aria-describedby="loginError"
+        />
       </div>
-      <p class="login-error" id="loginError" role="alert"></p>
+
+      <p class="login-error" id="loginError" role="alert" aria-live="assertive" aria-atomic="true"></p>
+
       <button type="submit" class="btn-primary">Entrar</button>
+
     </form>
   </div>
 </div>
