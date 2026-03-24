@@ -8,99 +8,140 @@
 </head>
 <body>
 
-<header>
+<a href="#main-content" class="skip-link">Pular para o conteúdo</a>
+
+<header role="banner">
   <div class="header-left">
-    <h1>🏥 Reposição de Estoque</h1>
-    <span id="updated"></span>
+    <h1>🏥 <span>Reposição de Estoque</span></h1>
+    <span id="updated" aria-live="polite" aria-atomic="true"></span>
   </div>
   <div class="header-right">
-    <span id="nomeUsuario"></span>
-    <button class="btn-logout" id="btnLogout">Sair</button>
+    <span id="nomeUsuario" aria-label="Usuário logado"></span>
+    <button class="btn-logout" id="btnLogout" aria-label="Sair do sistema">Sair</button>
   </div>
 </header>
 
-<nav class="subnav">
+<nav class="subnav" aria-label="Navegação secundária">
   <a href="index.html" class="subnav-link">← Voltar ao Dashboard</a>
 </nav>
 
-<main>
+<main id="main-content">
 
-  <div id="apiBanner" class="api-banner"></div>
+  <div id="apiBanner" class="api-banner" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <!-- Formulário de reposição -->
-  <div class="card reposicao-card">
-    <div class="card-title">Registrar Entrada de Estoque</div>
+  <section class="card reposicao-card" aria-labelledby="titulo-reposicao">
+    <h2 class="card-title" id="titulo-reposicao">Registrar Entrada de Estoque</h2>
 
-    <div class="reposicao-form">
+    <form class="reposicao-form" id="reposicaoForm" novalidate aria-describedby="formError">
 
       <div class="form-group">
         <label for="selectProduto">Produto</label>
-        <select id="selectProduto" class="filter-select full-width">
+        <select
+          id="selectProduto"
+          class="filter-select full-width"
+          aria-required="true"
+          aria-describedby="formError"
+        >
           <option value="">Carregando produtos...</option>
         </select>
       </div>
 
-      <div class="produto-info" id="produtoInfo" hidden>
+      <!-- Info do produto selecionado -->
+      <div
+        class="produto-info"
+        id="produtoInfo"
+        hidden
+        aria-live="polite"
+        aria-atomic="true"
+        aria-label="Informações do produto selecionado"
+      >
         <div class="info-row">
-          <span class="info-label">Categoria</span>
-          <span id="infoCat">—</span>
+          <span class="info-label" id="label-cat">Categoria</span>
+          <span id="infoCat" aria-labelledby="label-cat">—</span>
         </div>
         <div class="info-row">
-          <span class="info-label">Estoque atual</span>
-          <span id="infoQtd">—</span>
+          <span class="info-label" id="label-qtd">Estoque atual</span>
+          <span id="infoQtd" aria-labelledby="label-qtd">—</span>
         </div>
         <div class="info-row">
-          <span class="info-label">Estoque mínimo</span>
-          <span id="infoMin">—</span>
+          <span class="info-label" id="label-min">Estoque mínimo</span>
+          <span id="infoMin" aria-labelledby="label-min">—</span>
         </div>
         <div class="info-row">
-          <span class="info-label">Sugestão de reposição</span>
-          <span id="infoSugestao" class="badge badge-alert">—</span>
+          <span class="info-label" id="label-sug">Sugestão de reposição</span>
+          <span id="infoSugestao" class="badge badge-alert" aria-labelledby="label-sug">—</span>
         </div>
       </div>
 
       <div class="form-group">
         <label for="inputQtd">Quantidade a repor</label>
-        <input type="number" id="inputQtd" class="filter-input full-width" min="1" placeholder="0" />
+        <input
+          type="number"
+          id="inputQtd"
+          class="filter-input full-width"
+          min="1"
+          placeholder="0"
+          aria-required="true"
+          aria-describedby="infoSugestao formError"
+        />
       </div>
 
       <div class="form-group">
-        <label for="inputObs">Observação (opcional)</label>
-        <input type="text" id="inputObs" class="filter-input full-width" placeholder="ex: Fornecedor X, NF 1234..." />
+        <label for="inputObs">Observação <span aria-hidden="true">(opcional)</span></label>
+        <input
+          type="text"
+          id="inputObs"
+          class="filter-input full-width"
+          placeholder="ex: Fornecedor X, NF 1234..."
+          aria-required="false"
+        />
       </div>
 
-      <p class="form-error" id="formError" role="alert"></p>
+      <p class="form-error" id="formError" role="alert" aria-live="assertive" aria-atomic="true"></p>
 
-      <button class="btn-primary" id="btnConfirmar">Confirmar Entrada</button>
-    </div>
-  </div>
+      <button class="btn-primary" id="btnConfirmar" type="button">Confirmar Entrada</button>
 
-  <!-- Histórico de entradas recentes -->
-  <div class="card" id="cardHistorico" hidden>
-    <div class="card-title">Histórico Recente — <span id="historicoNome"></span></div>
+    </form>
+  </section>
+
+  <!-- Histórico -->
+  <section class="card" id="cardHistorico" hidden aria-labelledby="titulo-historico">
+    <h2 class="card-title" id="titulo-historico">
+      Histórico Recente — <span id="historicoNome"></span>
+    </h2>
     <div class="table-wrap">
-      <table>
+      <table aria-labelledby="titulo-historico">
         <thead>
           <tr>
-            <th>Tipo</th>
-            <th>Quantidade</th>
-            <th>Observação</th>
-            <th>Data</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Quantidade</th>
+            <th scope="col">Observação</th>
+            <th scope="col">Data</th>
           </tr>
         </thead>
-        <tbody id="tbodyHistorico"></tbody>
+        <tbody id="tbodyHistorico" aria-live="polite"></tbody>
       </table>
     </div>
-  </div>
+  </section>
 
   <!-- Toast de sucesso -->
-  <div class="toast" id="toast"></div>
+  <div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
 
 </main>
 
-<footer>
+<footer role="contentinfo">
   Dashboard de Métricas Hospitalares · Diogo Bello ·
-  <a href="https://github.com/Dioguint" target="_blank" rel="noopener noreferrer">github.com/Dioguint</a>
+  <a href="https://github.com/Dioguint" target="_blank" rel="noopener noreferrer"
+     aria-label="Perfil do GitHub de Dioguint (abre em nova aba)">
+    github.com/Dioguint
+  </a>
 </footer>
 
 <script src="js/reposicao.js"></script>
