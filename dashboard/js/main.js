@@ -147,7 +147,9 @@ function renderTabela() {
     const { cls, txt } = BADGE[r.status];
     const pct = Math.round((r.atual / r.min) * 100);
     const tr  = document.createElement('tr');
-    tr.title  = 'Clique para ver detalhes';
+    tr.setAttribute('tabindex', '0');
+    tr.setAttribute('role', 'button');
+    tr.setAttribute('aria-label', `Ver detalhes de ${r.produto} — status ${txt}`);
     tr.innerHTML = `
       <td><span class="product-name">${r.produto}</span></td>
       <td>${r.categoria}</td>
@@ -155,6 +157,9 @@ function renderTabela() {
       <td>${r.min}</td>
       <td><span class="badge ${cls}">${txt}</span></td>`;
     tr.addEventListener('click', () => openModal(r, cls, txt, pct));
+    tr.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(r, cls, txt, pct); }
+    });
     tbody.appendChild(tr);
   });
 }
@@ -168,7 +173,10 @@ renderTabela();
 const overlay    = document.getElementById('modalOverlay');
 const modalClose = document.getElementById('modalClose');
 
+let _lastFocused = null;
+
 function openModal(r, cls, txt, pct) {
+  _lastFocused = document.activeElement;
   document.getElementById('modalTitle').textContent = r.produto;
   document.getElementById('modalBody').innerHTML = `
     <div class="modal-row"><span class="modal-label">Categoria</span><span>${r.categoria}</span></div>
@@ -177,11 +185,20 @@ function openModal(r, cls, txt, pct) {
     <div class="modal-row"><span class="modal-label">Nível do estoque</span><span>${pct}% do mínimo</span></div>
     <div class="modal-row"><span class="modal-label">Status</span><span class="badge ${cls}">${txt}</span></div>
     <div class="modal-row"><span class="modal-label">Ação recomendada</span><span>Solicitar reposição de ${r.min - r.atual} unidades</span></div>`;
+  overlay.removeAttribute('hidden');
   overlay.classList.add('open');
+  modalClose.focus();
 }
 
-modalClose.addEventListener('click', () => overlay.classList.remove('open'));
-overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+function closeModal() {
+  overlay.classList.remove('open');
+  overlay.setAttribute('hidden', '');
+  if (_lastFocused) _lastFocused.focus();
+}
+
+modalClose.addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
 
 // ── Export CSV ────────────────────────────────────────────────────────────────
 document.getElementById('btnExport').addEventListener('click', () => {
