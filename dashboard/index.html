@@ -9,91 +9,119 @@
 </head>
 <body>
 
-<header>
+<!-- Pular para o conteúdo principal (navegação por teclado) -->
+<a href="#main-content" class="skip-link">Pular para o conteúdo</a>
+
+<header role="banner">
   <div class="header-left">
-    <h1>🏥 Dashboard de Métricas Hospitalares</h1>
-    <span id="updated"></span>
+    <h1>🏥 <span>Dashboard de Métricas Hospitalares</span></h1>
+    <span id="updated" aria-live="polite" aria-atomic="true"></span>
   </div>
   <div class="header-right">
-    <span id="nomeUsuario"></span>
-    <button class="btn-logout" id="btnLogout">Sair</button>
+    <span id="nomeUsuario" aria-label="Usuário logado"></span>
+    <button class="btn-logout" id="btnLogout" aria-label="Sair do sistema">Sair</button>
   </div>
 </header>
 
-<nav class="subnav">
+<nav class="subnav" aria-label="Navegação secundária">
   <a href="reposicao.html" class="subnav-link">+ Registrar Reposição</a>
 </nav>
 
-<main>
+<main id="main-content">
 
-  <div id="apiBanner" class="api-banner"></div>
+  <div id="apiBanner" class="api-banner" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <!-- KPIs -->
-  <section class="kpis" id="kpis"></section>
+  <section class="kpis" id="kpis" aria-label="Indicadores de desempenho do estoque"></section>
 
   <!-- Gráficos -->
-  <section class="charts">
-    <div class="card">
-      <div class="card-title">Movimentações — últimos 7 dias</div>
-      <canvas id="chartMovs"></canvas>
+  <section class="charts" aria-label="Gráficos de movimentação e categorias">
+    <div class="card" role="region" aria-labelledby="titulo-movs">
+      <h2 class="card-title" id="titulo-movs">Movimentações — últimos 7 dias</h2>
+      <canvas id="chartMovs"
+        role="img"
+        aria-label="Gráfico de barras com entradas e saídas dos últimos 7 dias">
+      </canvas>
     </div>
-    <div class="card">
-      <div class="card-title">Distribuição por categoria</div>
-      <canvas id="chartCats"></canvas>
+    <div class="card" role="region" aria-labelledby="titulo-cats">
+      <h2 class="card-title" id="titulo-cats">Distribuição por categoria</h2>
+      <canvas id="chartCats"
+        role="img"
+        aria-label="Gráfico de rosca mostrando distribuição de itens por categoria">
+      </canvas>
     </div>
   </section>
 
   <!-- Modal de detalhes -->
-  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div
+    class="modal-overlay"
+    id="modalOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+    aria-describedby="modalBody"
+    hidden
+  >
     <div class="modal">
-      <button class="modal-close" id="modalClose" aria-label="Fechar">✕</button>
+      <button class="modal-close" id="modalClose" aria-label="Fechar detalhes do produto">✕</button>
       <h2 id="modalTitle">Detalhes do Produto</h2>
       <div id="modalBody"></div>
     </div>
   </div>
 
   <!-- Tabela de críticos -->
-  <div class="card">
+  <section class="card" aria-labelledby="titulo-criticos">
     <div class="toolbar">
-      <div class="card-title">Itens em Estoque Crítico</div>
-      <button class="btn-export" id="btnExport">⬇ Exportar CSV</button>
+      <h2 class="card-title" id="titulo-criticos">Itens em Estoque Crítico</h2>
+      <button class="btn-export" id="btnExport" aria-label="Exportar lista de itens críticos em CSV">
+        ⬇ Exportar CSV
+      </button>
     </div>
 
-    <div class="filters">
+    <div class="filters" role="search" aria-label="Filtrar itens críticos">
       <input
         type="search"
         class="filter-input"
         id="inputBusca"
         placeholder="Buscar por nome do produto..."
-        aria-label="Buscar produto"
+        aria-label="Buscar produto pelo nome"
+        aria-controls="tabelaCriticos"
       />
-      <select class="filter-select" id="selectCategoria" aria-label="Filtrar por categoria">
+      <select
+        class="filter-select"
+        id="selectCategoria"
+        aria-label="Filtrar por categoria"
+        aria-controls="tabelaCriticos"
+      >
         <option value="">Todas as categorias</option>
       </select>
-      <span class="filter-count" id="filterCount"></span>
+      <span class="filter-count" id="filterCount" aria-live="polite" aria-atomic="true"></span>
     </div>
 
     <div class="table-wrap">
-      <table>
+      <table aria-labelledby="titulo-criticos" aria-describedby="filterCount">
         <thead>
           <tr>
-            <th>Produto</th>
-            <th>Categoria</th>
-            <th>Qtd. Atual</th>
-            <th>Mínimo</th>
-            <th>Status</th>
+            <th scope="col">Produto</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Qtd. Atual</th>
+            <th scope="col">Mínimo</th>
+            <th scope="col">Status</th>
           </tr>
         </thead>
-        <tbody id="tabelaCriticos"></tbody>
+        <tbody id="tabelaCriticos" aria-live="polite" aria-relevant="all"></tbody>
       </table>
     </div>
-  </div>
+  </section>
 
 </main>
 
-<footer>
+<footer role="contentinfo">
   Dashboard de Métricas Hospitalares · Diogo Bello ·
-  <a href="https://github.com/Dioguint" target="_blank" rel="noopener noreferrer">github.com/Dioguint</a>
+  <a href="https://github.com/Dioguint" target="_blank" rel="noopener noreferrer"
+     aria-label="Perfil do GitHub de Dioguint (abre em nova aba)">
+    github.com/Dioguint
+  </a>
 </footer>
 
 <script src="js/main.js"></script>
